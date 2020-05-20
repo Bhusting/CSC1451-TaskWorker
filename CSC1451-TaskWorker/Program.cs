@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CSC1451_TaskWorker.ASB;
+using CSC1451_TaskWorker.Handlers;
 using CSC1451_TaskWorker.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +39,9 @@ namespace CSC1451_TaskWorker
                     services.AddSingleton<EventLog>();
 
                     // ServiceBus
+                    services.AddSingleton<AddEventHandler>();
+                    services.AddSingleton<ClearEventsHandler>();
+
                     services.AddSingleton<ServiceBusClient>();
                     services.AddHostedService<EndpointInitializer>();
 

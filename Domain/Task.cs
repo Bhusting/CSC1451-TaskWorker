@@ -4,11 +4,11 @@ namespace Domain
 {
     public class Task
     {
-        public Guid EventId { get; set; }
+        public Guid TaskId { get; set; }
 
-        public string EventName { get; set; }
+        public string TaskName { get; set; }
 
-        public string EventTime { get; set; }
+        public string EndTime { get; set; }
 
         public Guid Channel { get; set; }
     }

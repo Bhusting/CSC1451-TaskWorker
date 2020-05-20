@@ -22,7 +22,7 @@ namespace CSC1451_TaskWorker
         
         protected override async System.Threading.Tasks.Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await _eventLog.AddEvent(new Domain.Task() { EventId = Guid.Empty, Channel = Guid.Empty, EventName = "Test", EventTime = "22:51" });
+            await _eventLog.AddEvent(new Domain.Task() { TaskId = Guid.Empty, Channel = Guid.Empty, TaskName = "Test", EndTime = "22:51" });
 
             while (!stoppingToken.IsCancellationRequested)
             {

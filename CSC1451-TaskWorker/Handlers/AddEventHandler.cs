@@ -23,7 +23,7 @@ namespace CSC1451_TaskWorker.Handlers
         {
             var ev = JsonConvert.DeserializeObject<Domain.Task>(messageBody);
 
-            _logger.LogInformation($"Adding Task {ev.EventName}");
+            _logger.LogInformation($"Adding Task {ev.TaskName}");
 
             await _eventLog.AddEvent(ev);
         }

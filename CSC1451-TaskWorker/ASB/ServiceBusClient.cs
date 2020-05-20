@@ -25,9 +25,9 @@ namespace CSC1451_TaskWorker.ASB
         {
             string endpointName;
 #if DEBUG
-            endpointName = $"Tak.ProfileService.{Environment.MachineName}";
+            endpointName = $"Tak.TaskWorker.{Environment.MachineName}";
 #else
-            endpointName = "Tak.ProfileService";
+            endpointName = "Tak.TaskWorker";
 #endif
 
             await CreateQueueIfNotExist(_settings.ServiceBus, endpointName);
@@ -59,7 +59,7 @@ namespace CSC1451_TaskWorker.ASB
 
         private async Task ProcessMessagesAsync(Message message, CancellationToken token)
         {
-            var type = Type.GetType($"CSC4151_TaskWorker.Handlers.{message.Label}Handler, CSC4151-TaskWorker");
+            var type = Type.GetType($"CSC1451_TaskWorker.Handlers.{message.Label}Handler, CSC1451-TaskWorker");
             var handler = (IMessageHandler)_provider.GetService(type);
 
             var body = Encoding.ASCII.GetString(message.Body);
