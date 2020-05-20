@@ -13,7 +13,7 @@ variables:
   dockerRegistryServiceConnection: 'af168a27-a4cf-4aa3-8cab-b613c91957b6'
   imageRepository: 'bhustingcsctaskworker'
   containerRegistry: 'takappregistry.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/CSC1451-TaskWorker/Dockerfile'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
   
   # Agent VM image name
