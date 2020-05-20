@@ -5,9 +5,9 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["CSC1451-TaskWorker.csproj", "CSC1451-TaskWorker/"]
-COPY ["../Domain/Domain.csproj", "Domain/"]
-RUN dotnet restore "CSC1451-TaskWorker.csproj"
+COPY ["CSC1451-TaskWorker/CSC1451-TaskWorker.csproj", "CSC1451-TaskWorker/"]
+COPY ["Domain/Domain.csproj", "Domain/"]
+RUN dotnet restore "CSC1451-TaskWorker/CSC1451-TaskWorker.csproj"
 COPY . .
 WORKDIR "/src/CSC1451-TaskWorker"
 RUN dotnet build "CSC1451-TaskWorker.csproj" -c Release -o /app/build
