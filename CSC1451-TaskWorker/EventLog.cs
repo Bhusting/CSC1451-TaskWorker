@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 using CSC1451_TaskWorker.Settings;
 using CSC1451_TaskWorker.Time;
@@ -66,6 +67,18 @@ namespace CSC1451_TaskWorker
         {
             var res = await _pusher.TriggerAsync(_eventLog[0].Channel.ToString(), _eventLog[0].TaskName, null);
             _eventLog.RemoveAt(0);
+
+            using (var sqlConn = new SqlConnection(
+                $"Server=tcp:taksql.database.windows.net,1433;InitialCatalog=tak;PersistSecurityInfo=False;UserID=bhusting;Password =!TakApp42;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;ConnectionTimeout=30;")
+            )
+                await sqlConn.OpenAsync();
+            {
+                using (var sqlCmd = new SqlCommand($"DELETE FROM Task WHERE TaskId = \'{_eventLog[0].TaskId}\'"))
+                {
+                    sqlCmd.ExecuteNonQuery();
+                }
+            }
+
         }
 
         public async Task ClearEvents()
