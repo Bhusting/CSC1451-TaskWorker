@@ -4,16 +4,18 @@ using System.Data.SqlClient;
 using System.Threading.Tasks;
 using CSC1451_TaskWorker.Settings;
 using CSC1451_TaskWorker.Time;
+using Microsoft.Extensions.Logging;
 using PusherServer;
 
 namespace CSC1451_TaskWorker
 {
     public class EventLog
     {
+        private readonly ILogger<EventLog> _logger;
         private readonly List<Domain.Task> _eventLog = new List<Domain.Task>();
         private readonly Pusher _pusher;
 
-        public EventLog(PusherSettings settings)
+        public EventLog(ILogger<EventLog> logger, PusherSettings settings)
         {
             _pusher = new Pusher(settings.AppId, settings.Key, settings.Secret, new PusherOptions() {Cluster = settings.Cluster });
         }
@@ -66,10 +68,10 @@ namespace CSC1451_TaskWorker
         public async Task TriggerEvent()
         {
             var res = await _pusher.TriggerAsync(_eventLog[0].Channel.ToString(), _eventLog[0].TaskName, null);
-            _eventLog.RemoveAt(0);
 
+            _logger.LogInformation($"Deleting Event {_eventLog[0].TaskName}");
             using (var sqlConn = new SqlConnection(
-                $"Server=tcp:taksql.database.windows.net,1433;InitialCatalog=tak;PersistSecurityInfo=False;UserID=bhusting;Password =!TakApp42;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;ConnectionTimeout=30;")
+                $"Server=tcp:taksql.database.windows.net,1433;Initial Catalog=tak;Persist Security Info=False;User ID=bhusting;Password =!TakApp42;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;")
             )
                 await sqlConn.OpenAsync();
             {
@@ -78,6 +80,8 @@ namespace CSC1451_TaskWorker
                     sqlCmd.ExecuteNonQuery();
                 }
             }
+
+            _eventLog.RemoveAt(0);
 
         }
 
