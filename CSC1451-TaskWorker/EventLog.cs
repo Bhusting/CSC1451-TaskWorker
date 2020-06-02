@@ -74,12 +74,10 @@ namespace CSC1451_TaskWorker
 
             try
             {
-                using (var sqlConn = new SqlConnection(
-                    $"Server=tcp:taksql.database.windows.net,1433;Initial Catalog=tak;Persist Security Info=False;User ID=bhusting;Password =!TakApp42;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;")
-                )
-                    await sqlConn.OpenAsync();
+                using (var sqlConn = new SqlConnection($"Server=tcp:taksql.database.windows.net,1433;Initial Catalog=tak;Persist Security Info=False;User ID=bhusting;Password =!TakApp42;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"))
                 {
-                    using (var sqlCmd = new SqlCommand($"DELETE FROM Task WHERE TaskId = \'{_eventLog[0].TaskId}\'"))
+                    await sqlConn.OpenAsync();
+                    using (var sqlCmd = new SqlCommand($"DELETE FROM Task WHERE TaskId = \'{_eventLog[0].TaskId}\'", sqlConn))
                     {
                         sqlCmd.ExecuteNonQuery();
                     }
