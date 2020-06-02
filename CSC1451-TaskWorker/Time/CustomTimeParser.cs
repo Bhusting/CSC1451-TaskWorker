@@ -9,14 +9,36 @@ namespace CSC1451_TaskWorker.Time
 
         public static TimeSpan ParseEndTime(this string time)
         {
+            var hours = "";
+            var minutes = "";
 
-            var hours = $"{time[0]}{time[1]}";
-            var minutes = $"{time[3]}{time[4]}";
+            var minuteCheck = false;
+            for (var x = 0; x < time.Length; x++)
+            {
+                if (x == ':')
+                {
+                    minuteCheck = true;
+                }
+                else
+                {
+                    if (!minuteCheck)
+                    {
+                        hours = $"{hours}{time[x]}";
+                    }
+                    else
+                    {
+
+                        minutes = $"{minutes}{time[x]}";
+                    }
+                }
+
+            }
 
             var result = new TimeSpan(int.Parse(hours), int.Parse(minutes), 0);
 
             return result;
         }
+    }
 
     }
 }
