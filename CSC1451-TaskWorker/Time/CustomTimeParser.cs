@@ -38,7 +38,6 @@ namespace CSC1451_TaskWorker.Time
 
             return result;
         }
-    }
 
     }
 }
