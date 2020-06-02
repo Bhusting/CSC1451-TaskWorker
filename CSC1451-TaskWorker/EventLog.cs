@@ -18,6 +18,7 @@ namespace CSC1451_TaskWorker
         public EventLog(ILogger<EventLog> logger, PusherSettings settings)
         {
             _pusher = new Pusher(settings.AppId, settings.Key, settings.Secret, new PusherOptions() {Cluster = settings.Cluster });
+            _logger = logger;
         }
 
         public async Task AddEvent(Domain.Task ev)
@@ -70,15 +71,23 @@ namespace CSC1451_TaskWorker
             var res = await _pusher.TriggerAsync(_eventLog[0].Channel.ToString(), _eventLog[0].TaskName, null);
 
             _logger.LogInformation($"Deleting Event {_eventLog[0].TaskName}");
-            using (var sqlConn = new SqlConnection(
-                $"Server=tcp:taksql.database.windows.net,1433;Initial Catalog=tak;Persist Security Info=False;User ID=bhusting;Password =!TakApp42;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;")
-            )
-                await sqlConn.OpenAsync();
+
+            try
             {
-                using (var sqlCmd = new SqlCommand($"DELETE FROM Task WHERE TaskId = \'{_eventLog[0].TaskId}\'"))
+                using (var sqlConn = new SqlConnection(
+                    $"Server=tcp:taksql.database.windows.net,1433;Initial Catalog=tak;Persist Security Info=False;User ID=bhusting;Password =!TakApp42;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;")
+                )
+                    await sqlConn.OpenAsync();
                 {
-                    sqlCmd.ExecuteNonQuery();
+                    using (var sqlCmd = new SqlCommand($"DELETE FROM Task WHERE TaskId = \'{_eventLog[0].TaskId}\'"))
+                    {
+                        sqlCmd.ExecuteNonQuery();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation($"Cannot Delete Task {e.Message}");
             }
 
             _eventLog.RemoveAt(0);
