@@ -15,7 +15,7 @@ namespace CSC1451_TaskWorker.Time
             var minuteCheck = false;
             for (var x = 0; x < time.Length; x++)
             {
-                if (x == ':')
+                if (time[x] == ':')
                 {
                     minuteCheck = true;
                 }
